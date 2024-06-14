@@ -16,6 +16,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.aladinjunior.coletor.camera.CameraPreview
+
 object TabOptions {
     private const val SCAN_CODE = "Escanear Código"
     private const val HISTORY = "Histórico"
@@ -31,8 +33,9 @@ fun MainScreen(
 
     Column {
         AppTabRow()
-        Text(text = "MAIN SCREEN")
+        CameraPreview()
     }
+
 
 
 }
