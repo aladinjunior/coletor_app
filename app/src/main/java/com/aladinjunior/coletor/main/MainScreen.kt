@@ -29,6 +29,7 @@ object TabOptions {
 
 }
 
+
 @Composable
 fun MainScreen(
 
@@ -36,47 +37,53 @@ fun MainScreen(
 
     Column {
         AppTabRow()
-        Box(modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center){
-            CameraPreview()
 
-        }
     }
-
 
 
 }
 
+
 @Composable
-fun AppTabRow() {
+fun AppTabRow(
+    tabsContent: List<@Composable () -> Unit> = listOf(
+        { ScanScreen() },
+        { HistoryScreen() }
+    )
+) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-    TabRow(
-        selectedTabIndex = selectedTabIndex,
-        indicator = { tabPositions ->
-            TabRowDefaults.Indicator(
-                modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                color = Color.Blue
+
+    Column {
+        TabRow(
+            selectedTabIndex = selectedTabIndex,
+            indicator = { tabPositions ->
+                TabRowDefaults.Indicator(
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
+                    color = Color.Blue
 
 
-            )
-        }
-    ) {
-        TabOptions.tabs.forEachIndexed { index, tab ->
-            var isSelected = selectedTabIndex == index
-            Tab(
-                selected = isSelected,
-                onClick = { selectedTabIndex = index },
-                modifier = Modifier
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = tab,
-                    color = if (isSelected) Color.Blue else Color.Blue.copy(alpha = 0.4f),
                 )
+            }
+        ) {
+            TabOptions.tabs.forEachIndexed { index, tab ->
+                var isSelected = selectedTabIndex == index
+                Tab(
+                    selected = isSelected,
+                    onClick = { selectedTabIndex = index },
+                    modifier = Modifier
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text = tab,
+                        color = if (isSelected) Color.Blue else Color.Blue.copy(alpha = 0.4f),
+                    )
 
 
+                }
             }
         }
+        tabsContent.getOrNull(selectedTabIndex)?.invoke()
     }
+
 }
 
