@@ -11,6 +11,8 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -20,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aladinjunior.coletor.camera.CameraPreview
+import com.aladinjunior.coletor.camera.presentation.CameraViewModel
 
 object TabOptions {
     private const val SCAN_CODE = "Escanear Código"
@@ -32,7 +35,6 @@ object TabOptions {
 
 @Composable
 fun MainScreen(
-
 ) {
 
     Column {
@@ -46,8 +48,9 @@ fun MainScreen(
 
 @Composable
 fun AppTabRow(
+    viewModel: CameraViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
     tabsContent: List<@Composable () -> Unit> = listOf(
-        { ScanScreen() },
+        { ScanScreen(viewModel = viewModel) },
         { HistoryScreen() }
     )
 ) {
@@ -69,7 +72,10 @@ fun AppTabRow(
                 var isSelected = selectedTabIndex == index
                 Tab(
                     selected = isSelected,
-                    onClick = { selectedTabIndex = index },
+                    onClick = {
+                        selectedTabIndex = index
+                        viewModel.setCameraVisibility(index == 0)
+                    },
                     modifier = Modifier
                         .padding(16.dp)
                 ) {
