@@ -12,6 +12,8 @@ class CameraViewModel : ViewModel() {
 
     private val _isCameraVisible = MutableStateFlow(true)
 
+
+
     fun getCameraController(context: Context): LifecycleCameraController {
         if (cameraController == null) {
             cameraController = LifecycleCameraController(context).apply {

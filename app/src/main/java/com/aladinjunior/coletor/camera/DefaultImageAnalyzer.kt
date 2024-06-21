@@ -14,7 +14,6 @@ class DefaultImageAnalyzer(
     val onBarcodesDetected: (List<Barcode>) -> Unit
 ) {
 
-
     private val options = BarcodeScannerOptions.Builder()
         .setBarcodeFormats(
             Barcode.FORMAT_CODE_128,
@@ -39,7 +38,6 @@ class DefaultImageAnalyzer(
         val barcodes = result.getValue(scanner)
         if (barcodes != null)
             onBarcodesDetected(barcodes)
-
 
 
     }
