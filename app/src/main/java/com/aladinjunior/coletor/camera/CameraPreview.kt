@@ -28,7 +28,9 @@ import com.google.mlkit.vision.barcode.common.Barcode
 
 
 @Composable
-fun CameraPreview() {
+fun CameraPreview(
+    mostRecentBarcode: (Barcode) -> Unit,
+) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
     val cameraController = remember { LifecycleCameraController(context) }
@@ -47,8 +49,12 @@ fun CameraPreview() {
 
 
     val defaultImageAnalyzer = remember {
-        DefaultImageAnalyzer(context) { detectedBarcodes ->
-            barcodes = detectedBarcodes
+        DefaultImageAnalyzer(context) {
+            barcodes = it
+            it.lastOrNull()?.let { barcode ->
+                mostRecentBarcode(barcode)
+            }
+
         }
     }
 
