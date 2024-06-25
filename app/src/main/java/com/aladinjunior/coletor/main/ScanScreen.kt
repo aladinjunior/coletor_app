@@ -71,9 +71,13 @@ fun ScanScreen(
         }
 
         Button(onClick = { /*TODO*/ },
-            shape = RoundedCornerShape(15f)
+            shape = AssistChipDefaults.shape,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Blue.copy(alpha = 0.6f)
+            )
         ) {
             Icon(imageVector = Icons.Filled.Create, contentDescription = "Insert code")
+            Spacer(modifier = Modifier.size(8.dp))
             Text(text = "Digite o código de barras")
         }
 
@@ -124,12 +128,14 @@ fun AssistChipRow() {
                         START_COLLECT -> Icon(
                             imageVector = Icons.Filled.PlayArrow,
                             contentDescription = "Start collect",
-                            modifier = Modifier.size(AssistChipDefaults.IconSize)
+                            modifier = Modifier.size(AssistChipDefaults.IconSize),
+                            tint = Color.Blue.copy(alpha = 0.6f)
                         )
                         GENERATE_FILE -> Icon(
                             imageVector = Icons.Filled.Done,
                             contentDescription = "Generate file",
-                            modifier = Modifier.size(AssistChipDefaults.IconSize)
+                            modifier = Modifier.size(AssistChipDefaults.IconSize),
+                            tint = Color.Blue.copy(alpha = 0.6f)
                         )
                     }
 
