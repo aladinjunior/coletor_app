@@ -9,6 +9,8 @@ object Constants {
     const val START_COLLECT = "Iniciar coleta"
     const val GENERATE_FILE = "Gerar arquivo"
 
+    const val SCANNED_BARCODE = "Código de Barras Escaneado"
+
 
 
     val assistChipList = listOf(

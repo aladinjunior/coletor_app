@@ -29,7 +29,7 @@ import com.google.mlkit.vision.barcode.common.Barcode
 
 @Composable
 fun CameraPreview(
-    mostRecentBarcode: (Barcode) -> Unit,
+    mostRecentBarcode: (String) -> Unit,
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
@@ -52,7 +52,10 @@ fun CameraPreview(
         DefaultImageAnalyzer(context) {
             barcodes = it
             it.lastOrNull()?.let { barcode ->
-                mostRecentBarcode(barcode)
+                barcode.rawValue?.let { stringBarcode ->
+                    mostRecentBarcode(stringBarcode)
+                }
+
             }
 
         }

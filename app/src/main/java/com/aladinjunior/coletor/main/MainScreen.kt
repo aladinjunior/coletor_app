@@ -15,10 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.aladinjunior.coletor.camera.presentation.CameraViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 object TabOptions {
     private const val SCAN_CODE = "Escanear Código"
@@ -31,18 +28,19 @@ object TabOptions {
 
 @Composable
 fun MainScreen(
+    mostRecentBarcode: (String?) -> Unit
 ) {
     Column {
-        AppTabRow()
-
+        AppTabRow(mostRecentBarcode)
     }
 }
 
 
 @Composable
 fun AppTabRow(
+    mostRecentBarcode: (String?) -> Unit,
     tabsContent: List<@Composable () -> Unit> = listOf(
-        { ScanScreen{} },
+        { ScanScreen(mostRecentBarcode) },
         { HistoryScreen() }
     )
 ) {
@@ -61,7 +59,7 @@ fun AppTabRow(
             }
         ) {
             TabOptions.tabs.forEachIndexed { index, tab ->
-                var isSelected = selectedTabIndex == index
+                val isSelected = selectedTabIndex == index
                 Tab(
                     selected = isSelected,
                     onClick = {

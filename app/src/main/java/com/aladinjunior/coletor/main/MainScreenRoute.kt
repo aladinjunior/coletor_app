@@ -1,5 +1,6 @@
 package com.aladinjunior.coletor.main
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import com.aladinjunior.coletor.camera.presentation.CameraViewModel
@@ -13,5 +14,8 @@ fun MainScreenRoute(
         )
     )
 ) {
-    MainScreen()
+    MainScreen {
+        val TAG = "MainScreenRoute_Coletor"
+        Log.d(TAG, "MainScreenRoute: $it")
+    }
 }
