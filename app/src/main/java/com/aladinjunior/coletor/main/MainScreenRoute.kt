@@ -1,7 +1,8 @@
 package com.aladinjunior.coletor.main
 
-import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import com.aladinjunior.coletor.camera.presentation.CameraViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -14,8 +15,14 @@ fun MainScreenRoute(
         )
     )
 ) {
-    MainScreen {
-        val TAG = "MainScreenRoute_Coletor"
-        Log.d(TAG, "MainScreenRoute: $it")
-    }
+    val isCollectionRunning by viewModel.isCollectRunning.collectAsState()
+    MainScreen(
+        mostRecentBarcode = {
+            //TODO: Vai tomar no cu
+        },
+        startCollect = {
+            viewModel.startCollect()
+        },
+        isCollectionRunning = isCollectionRunning
+    )
 }

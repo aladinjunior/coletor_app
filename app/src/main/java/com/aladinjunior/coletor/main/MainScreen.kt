@@ -28,10 +28,16 @@ object TabOptions {
 
 @Composable
 fun MainScreen(
-    mostRecentBarcode: (String?) -> Unit
+    mostRecentBarcode: (String?) -> Unit,
+    startCollect: () -> Unit,
+    isCollectionRunning: Boolean,
 ) {
     Column {
-        AppTabRow(mostRecentBarcode)
+        AppTabRow(
+            mostRecentBarcode = mostRecentBarcode,
+            startCollect = startCollect,
+            isCollectionRunning = isCollectionRunning
+        )
     }
 }
 
@@ -39,8 +45,16 @@ fun MainScreen(
 @Composable
 fun AppTabRow(
     mostRecentBarcode: (String?) -> Unit,
+    startCollect: () -> Unit,
+    isCollectionRunning: Boolean,
     tabsContent: List<@Composable () -> Unit> = listOf(
-        { ScanScreen(mostRecentBarcode) },
+        {
+            ScanScreen(
+                mostRecentBarcode,
+                startCollect = startCollect,
+                isCollectionRunning = isCollectionRunning
+            )
+        },
         { HistoryScreen() }
     )
 ) {

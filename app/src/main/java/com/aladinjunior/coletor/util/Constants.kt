@@ -7,7 +7,8 @@ object Constants {
     const val ACTIONS = "Ações"
 
     const val START_COLLECT = "Iniciar coleta"
-    const val GENERATE_FILE = "Gerar arquivo"
+    const val GENERATE_FILE = "Exportar arquivo"
+    const val FINALIZE_COLLECT = "Finalizar coleta"
 
     const val SCANNED_BARCODE = "Código de Barras Escaneado"
 
@@ -15,6 +16,7 @@ object Constants {
 
     val assistChipList = listOf(
         START_COLLECT,
+        FINALIZE_COLLECT,
         GENERATE_FILE
     )
 
