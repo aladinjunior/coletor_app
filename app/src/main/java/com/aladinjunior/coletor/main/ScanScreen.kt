@@ -70,12 +70,13 @@ fun ScanScreen(
     mostRecentBarcode: (String?) -> Unit,
     startCollect: () -> Unit,
     isCollectionRunning: Boolean,
+    onSaveBarcode: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
+    var currentBarcodeReaded by remember { mutableStateOf("") }
 
-    var collectStarted by rememberSaveable { mutableStateOf(false) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -102,6 +103,7 @@ fun ScanScreen(
                 CameraPreview { barcode ->
                     barcode.let {
                         showBottomSheet = true
+                        currentBarcodeReaded = it
                     }
                 }
             } else {
@@ -138,7 +140,9 @@ fun ScanScreen(
         if (showBottomSheet) {
             ColetorBottomSheet(
                 onDismissRequest = { showBottomSheet = false },
-                sheetState = sheetState
+                sheetState = sheetState,
+                barcode = currentBarcodeReaded,
+                onSaveBarcode = onSaveBarcode
             )
         }
 
@@ -151,7 +155,9 @@ fun ScanScreen(
 @Composable
 fun ColetorBottomSheet(
     onDismissRequest: () -> Unit,
-    sheetState: SheetState
+    sheetState: SheetState,
+    barcode: String,
+    onSaveBarcode: () -> Unit
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -165,12 +171,12 @@ fun ColetorBottomSheet(
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold)
         )
-        BottomSheetBarcodeHeadline()
+        BottomSheetBarcodeHeadline(barcode)
 
         ColetorTextField()
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = onSaveBarcode,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Blue.copy(alpha = 0.6f)
             ),
@@ -185,7 +191,9 @@ fun ColetorBottomSheet(
 }
 
 @Composable
-fun BottomSheetBarcodeHeadline() {
+fun BottomSheetBarcodeHeadline(
+    barcode: String
+) {
     Surface(
         modifier = Modifier.size(width = 400.dp, height = 200.dp),
     ) {
@@ -217,7 +225,7 @@ fun BottomSheetBarcodeHeadline() {
                             color = Color.Blue.copy(alpha = 0.6f)
                         )
                     ) {
-                        append("000000000")
+                        append(barcode)
                     }
 
                 }

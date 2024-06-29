@@ -10,4 +10,5 @@ data class ScannedProduct(
     val id: Long = 0,
     val barcode: String,
     val quantity: Int,
+    val stockCode: String,
 )

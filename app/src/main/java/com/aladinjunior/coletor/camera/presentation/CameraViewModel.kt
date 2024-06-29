@@ -24,40 +24,12 @@ class CameraViewModel(
     fun startCollect() {
         _isCollectRunning.value = true
     }
-    fun saveScannedProduct(product: ScannedProduct) = viewModelScope.launch {
+    fun saveBarcode(product: ScannedProduct) = viewModelScope.launch {
         scannedProductRepository.insertScannedProduct(product)
     }
 
-    private var cameraController: LifecycleCameraController? = null
-
-    private val _isCameraVisible = MutableStateFlow(true)
-
-
-
-    fun getCameraController(context: Context): LifecycleCameraController {
-        if (cameraController == null) {
-            cameraController = LifecycleCameraController(context).apply {
-                bindToLifecycle(context as androidx.lifecycle.LifecycleOwner)
-            }
-        }
-        return cameraController!!
-    }
-
-    fun setCameraVisibility(isVisible: Boolean) {
-        _isCameraVisible.value = isVisible
-    }
-
-
-    private val _number = MutableStateFlow(0)
-    val number = _number.asStateFlow()
-
-    fun increase() {
-        _number.value++
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        cameraController?.unbind()
+    fun createStockCode(barcode: String, quantity: Int) : String {
+        return ""
     }
 
     object CameraViewModelProvider {
