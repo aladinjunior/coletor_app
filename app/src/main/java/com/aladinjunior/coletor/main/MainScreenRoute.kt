@@ -22,6 +22,7 @@ fun MainScreenRoute(
     val isCollectionRunning by viewModel.isCollectRunning.collectAsState()
     val quantityText by viewModel.itemQuantity.collectAsState()
     val barcode by viewModel.mostRecentBarcode.collectAsState()
+    val isOpenedBottomSheet by viewModel.isOpenedBottomSheet.collectAsState()
 
     MainScreen(
         mostRecentBarcode = {
@@ -29,10 +30,12 @@ fun MainScreenRoute(
                 viewModel.setCurrentBarcode(notNullMostRecentBarcode)
             }
         },
-        startCollect = {
-            viewModel.startCollect()
-        },
+        startCollect = viewModel::startCollect,
+
+        finalizeCollect = viewModel::finalizeCollect,
+
         isCollectionRunning = isCollectionRunning,
+
         onSaveBarcode = {
             val stockCode = viewModel.createStockCode(barcode, quantityText)
             val scannedProduct = ScannedProduct.ScannedProductBuilder()
@@ -47,8 +50,13 @@ fun MainScreenRoute(
 
         },
         quantityFieldText = quantityText,
+
         onQuantityFieldValueChange = {
             viewModel.setCurrentItemQuantity(it)
-        }
+        },
+
+        isOpenedBottomSheet = isOpenedBottomSheet,
+        canCollect = viewModel::canCollect
+
     )
 }

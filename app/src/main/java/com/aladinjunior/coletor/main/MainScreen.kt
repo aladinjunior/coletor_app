@@ -30,20 +30,26 @@ object TabOptions {
 fun MainScreen(
     mostRecentBarcode: (String?) -> Unit,
     startCollect: () -> Unit,
+    finalizeCollect: () -> Unit,
     isCollectionRunning: Boolean,
+    isOpenedBottomSheet: Boolean,
     onSaveBarcode: () -> Unit,
     quantityFieldText: String,
     onQuantityFieldValueChange: (String) -> Unit,
+    canCollect: () -> Boolean
 
 ) {
     Column {
         AppTabRow(
             mostRecentBarcode = mostRecentBarcode,
             startCollect = startCollect,
+            finalizeCollect = finalizeCollect,
             isCollectionRunning = isCollectionRunning,
+            isOpenedBottomSheet = isOpenedBottomSheet,
             onSaveBarcode = onSaveBarcode,
             quantityFieldText = quantityFieldText,
-            onQuantityFieldValueChange = onQuantityFieldValueChange
+            onQuantityFieldValueChange = onQuantityFieldValueChange,
+            canCollect = canCollect
         )
     }
 }
@@ -53,19 +59,25 @@ fun MainScreen(
 fun AppTabRow(
     mostRecentBarcode: (String?) -> Unit,
     startCollect: () -> Unit,
+    finalizeCollect: () -> Unit,
     isCollectionRunning: Boolean,
+    isOpenedBottomSheet: Boolean,
     onSaveBarcode: () -> Unit,
     quantityFieldText: String,
     onQuantityFieldValueChange: (String) -> Unit,
+    canCollect: () -> Boolean,
     tabsContent: List<@Composable () -> Unit> = listOf(
         {
             ScanScreen(
                 mostRecentBarcode,
                 startCollect = startCollect,
+                finalizeCollect = finalizeCollect,
                 isCollectionRunning = isCollectionRunning,
+                isOpenedBottomSheet = isOpenedBottomSheet,
                 onSaveBarcode = onSaveBarcode,
                 quantityFieldText = quantityFieldText,
-                onQuantityFieldValueChange = onQuantityFieldValueChange
+                onQuantityFieldValueChange = onQuantityFieldValueChange,
+                canCollect = canCollect
             )
         },
         { HistoryScreen() }

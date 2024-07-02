@@ -1,5 +1,6 @@
 package com.aladinjunior.coletor.camera
 
+import android.util.Log
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.LinearLayout
 import androidx.camera.view.LifecycleCameraController
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -29,13 +32,13 @@ import com.google.mlkit.vision.barcode.common.Barcode
 
 @Composable
 fun CameraPreview(
+    canCollect: Boolean,
     mostRecentBarcode: (String) -> Unit,
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
     val cameraController = remember { LifecycleCameraController(context) }
     var barcodes by remember { mutableStateOf(emptyList<Barcode>()) }
-
 
     val previewView = remember {
         PreviewView(context).apply {
@@ -46,10 +49,9 @@ fun CameraPreview(
         }
     }
 
-
-
     val defaultImageAnalyzer = remember {
         DefaultImageAnalyzer(context) {
+
             barcodes = it
             it.lastOrNull()?.let { barcode ->
                 barcode.rawValue?.let { stringBarcode ->
@@ -57,6 +59,7 @@ fun CameraPreview(
                 }
 
             }
+
 
         }
     }
@@ -68,10 +71,18 @@ fun CameraPreview(
     }
 
 
-    cameraController.setImageAnalysisAnalyzer(
-        ContextCompat.getMainExecutor(context),
-        defaultImageAnalyzer.mlKitAnalyzer
-    )
+    Log.d("chiuaua", "CameraPreview: $canCollect")
+
+
+    if (canCollect) {
+        cameraController.setImageAnalysisAnalyzer(
+            ContextCompat.getMainExecutor(context),
+            defaultImageAnalyzer.mlKitAnalyzer
+        )
+    } else {
+        cameraController.clearImageAnalysisAnalyzer()
+    }
+
 
     Box(
         modifier = Modifier

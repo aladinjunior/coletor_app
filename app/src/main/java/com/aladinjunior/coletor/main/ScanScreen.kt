@@ -62,21 +62,26 @@ import com.aladinjunior.coletor.util.Constants.INSTRUCTION_TEXT
 import com.aladinjunior.coletor.util.Constants.SCANNED_BARCODE
 import com.aladinjunior.coletor.util.Constants.START_COLLECT
 import com.aladinjunior.coletor.util.Constants.assistChipList
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScanScreen(
     mostRecentBarcode: (String?) -> Unit,
     startCollect: () -> Unit,
+    finalizeCollect: () -> Unit,
     isCollectionRunning: Boolean,
+    isOpenedBottomSheet: Boolean,
     onSaveBarcode: () -> Unit,
     quantityFieldText: String,
-    onQuantityFieldValueChange: (String) -> Unit
+    onQuantityFieldValueChange: (String) -> Unit,
+    canCollect: () -> Boolean
 ) {
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
     var currentBarcodeReaded by remember { mutableStateOf("") }
+
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -100,8 +105,9 @@ fun ScanScreen(
         ) {
 
             if (isCollectionRunning) {
-                CameraPreview { barcode ->
+                CameraPreview(!showBottomSheet) { barcode ->
                     barcode.let {
+                        !canCollect()
                         showBottomSheet = true
                         currentBarcodeReaded = it
                         mostRecentBarcode(currentBarcodeReaded)
@@ -136,11 +142,19 @@ fun ScanScreen(
         AssistChipRow(
             startCollect = startCollect,
             generateFile = {},
-            finalizeCollect = {}
+            finalizeCollect = finalizeCollect
         )
         if (showBottomSheet) {
             ColetorBottomSheet(
-                onDismissRequest = { showBottomSheet = false },
+                onDismissRequest = {
+                    scope.launch {
+                        sheetState.hide()
+                    }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            showBottomSheet = false
+                        }
+                    }
+                },
                 sheetState = sheetState,
                 barcode = currentBarcodeReaded,
                 onSaveBarcode = onSaveBarcode,
@@ -192,7 +206,7 @@ fun ColetorBottomSheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
-            ) {
+        ) {
             Text(text = "Inserir")
         }
     }
@@ -243,6 +257,7 @@ fun BottomSheetBarcodeHeadline(
 
     }
 }
+
 @Composable
 fun FakeCameraPreview() {
 
@@ -266,7 +281,7 @@ fun AssistChipRow(
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(10.dp),
-        modifier =  Modifier.padding(horizontal = 16.dp)
+        modifier = Modifier.padding(horizontal = 16.dp)
     ) {
         assistChipList.forEach { action ->
             AssistChip(
@@ -323,7 +338,7 @@ fun ColetorTextField(
         ),
         value = text,
         onValueChange = onValueChange,
-        label = { Text(text = "Quantidade")},
+        label = { Text(text = "Quantidade") },
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
