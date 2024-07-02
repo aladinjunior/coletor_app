@@ -71,11 +71,9 @@ fun ScanScreen(
     startCollect: () -> Unit,
     finalizeCollect: () -> Unit,
     isCollectionRunning: Boolean,
-    isOpenedBottomSheet: Boolean,
     onSaveBarcode: () -> Unit,
     quantityFieldText: String,
     onQuantityFieldValueChange: (String) -> Unit,
-    canCollect: () -> Boolean
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
@@ -107,7 +105,6 @@ fun ScanScreen(
             if (isCollectionRunning) {
                 CameraPreview(!showBottomSheet) { barcode ->
                     barcode.let {
-                        !canCollect()
                         showBottomSheet = true
                         currentBarcodeReaded = it
                         mostRecentBarcode(currentBarcodeReaded)

@@ -22,7 +22,6 @@ fun MainScreenRoute(
     val isCollectionRunning by viewModel.isCollectRunning.collectAsState()
     val quantityText by viewModel.itemQuantity.collectAsState()
     val barcode by viewModel.mostRecentBarcode.collectAsState()
-    val isOpenedBottomSheet by viewModel.isOpenedBottomSheet.collectAsState()
 
     MainScreen(
         mostRecentBarcode = {
@@ -55,8 +54,7 @@ fun MainScreenRoute(
             viewModel.setCurrentItemQuantity(it)
         },
 
-        isOpenedBottomSheet = isOpenedBottomSheet,
-        canCollect = viewModel::canCollect
+
 
     )
 }

@@ -32,11 +32,9 @@ fun MainScreen(
     startCollect: () -> Unit,
     finalizeCollect: () -> Unit,
     isCollectionRunning: Boolean,
-    isOpenedBottomSheet: Boolean,
     onSaveBarcode: () -> Unit,
     quantityFieldText: String,
     onQuantityFieldValueChange: (String) -> Unit,
-    canCollect: () -> Boolean
 
 ) {
     Column {
@@ -45,11 +43,9 @@ fun MainScreen(
             startCollect = startCollect,
             finalizeCollect = finalizeCollect,
             isCollectionRunning = isCollectionRunning,
-            isOpenedBottomSheet = isOpenedBottomSheet,
             onSaveBarcode = onSaveBarcode,
             quantityFieldText = quantityFieldText,
             onQuantityFieldValueChange = onQuantityFieldValueChange,
-            canCollect = canCollect
         )
     }
 }
@@ -61,11 +57,9 @@ fun AppTabRow(
     startCollect: () -> Unit,
     finalizeCollect: () -> Unit,
     isCollectionRunning: Boolean,
-    isOpenedBottomSheet: Boolean,
     onSaveBarcode: () -> Unit,
     quantityFieldText: String,
     onQuantityFieldValueChange: (String) -> Unit,
-    canCollect: () -> Boolean,
     tabsContent: List<@Composable () -> Unit> = listOf(
         {
             ScanScreen(
@@ -73,11 +67,9 @@ fun AppTabRow(
                 startCollect = startCollect,
                 finalizeCollect = finalizeCollect,
                 isCollectionRunning = isCollectionRunning,
-                isOpenedBottomSheet = isOpenedBottomSheet,
                 onSaveBarcode = onSaveBarcode,
                 quantityFieldText = quantityFieldText,
                 onQuantityFieldValueChange = onQuantityFieldValueChange,
-                canCollect = canCollect
             )
         },
         { HistoryScreen() }

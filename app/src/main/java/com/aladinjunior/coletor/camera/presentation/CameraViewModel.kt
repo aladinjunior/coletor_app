@@ -26,8 +26,6 @@ class CameraViewModel(
     private val _itemQuantity = MutableStateFlow("")
     val itemQuantity = _itemQuantity.asStateFlow()
 
-    private val _isOpenedBottomSheet = MutableStateFlow(false)
-    val isOpenedBottomSheet = _isOpenedBottomSheet.asStateFlow()
 
     fun startCollect() {
         _isCollectRunning.value = true
@@ -35,16 +33,6 @@ class CameraViewModel(
 
     fun finalizeCollect() {
         _isCollectRunning.value = false
-    }
-
-    /**
-     * when the BottomSheet is opened (true)
-     * this function return (false)
-     * which means that the app will not collect data untill the BottomSheet gets closed (false)
-     */
-    fun canCollect(): Boolean {
-        _isOpenedBottomSheet.value = true
-        return !isOpenedBottomSheet.value
     }
 
     fun setCurrentBarcode(barcode: String) {

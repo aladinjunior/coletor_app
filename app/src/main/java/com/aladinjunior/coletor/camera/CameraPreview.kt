@@ -64,14 +64,9 @@ fun CameraPreview(
         }
     }
 
-
     LaunchedEffect(cameraController, lifecycleOwner) {
         cameraController.bindToLifecycle(lifecycleOwner)
-
     }
-
-
-    Log.d("chiuaua", "CameraPreview: $canCollect")
 
 
     if (canCollect) {
