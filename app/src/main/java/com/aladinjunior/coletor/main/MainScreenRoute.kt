@@ -3,6 +3,9 @@ package com.aladinjunior.coletor.main
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import com.aladinjunior.coletor.camera.presentation.CameraViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -17,16 +20,35 @@ fun MainScreenRoute(
     )
 ) {
     val isCollectionRunning by viewModel.isCollectRunning.collectAsState()
+    val quantityText by viewModel.itemQuantity.collectAsState()
+    val barcode by viewModel.mostRecentBarcode.collectAsState()
+
     MainScreen(
         mostRecentBarcode = {
-            //TODO:
+            it?.let { notNullMostRecentBarcode ->
+                viewModel.setCurrentBarcode(notNullMostRecentBarcode)
+            }
         },
         startCollect = {
             viewModel.startCollect()
         },
         isCollectionRunning = isCollectionRunning,
         onSaveBarcode = {
-            viewModel.saveBarcode(ScannedProduct(barcode = "", quantity = 0, stockCode = ""))
+            val stockCode = viewModel.createStockCode(barcode, quantityText)
+            val scannedProduct = ScannedProduct.ScannedProductBuilder()
+                .setBarcode(barcode)
+                .setQuantity(quantityText)
+                .setStockCode(stockCode)
+                .build()
+            with(viewModel) {
+                saveBarcode(scannedProduct)
+                resetBarcodeValues()
+            }
+
+        },
+        quantityFieldText = quantityText,
+        onQuantityFieldValueChange = {
+            viewModel.setCurrentItemQuantity(it)
         }
     )
 }

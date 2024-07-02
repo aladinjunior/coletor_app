@@ -37,7 +37,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -70,13 +69,14 @@ fun ScanScreen(
     mostRecentBarcode: (String?) -> Unit,
     startCollect: () -> Unit,
     isCollectionRunning: Boolean,
-    onSaveBarcode: () -> Unit
+    onSaveBarcode: () -> Unit,
+    quantityFieldText: String,
+    onQuantityFieldValueChange: (String) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
     var currentBarcodeReaded by remember { mutableStateOf("") }
-
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -104,6 +104,7 @@ fun ScanScreen(
                     barcode.let {
                         showBottomSheet = true
                         currentBarcodeReaded = it
+                        mostRecentBarcode(currentBarcodeReaded)
                     }
                 }
             } else {
@@ -142,7 +143,9 @@ fun ScanScreen(
                 onDismissRequest = { showBottomSheet = false },
                 sheetState = sheetState,
                 barcode = currentBarcodeReaded,
-                onSaveBarcode = onSaveBarcode
+                onSaveBarcode = onSaveBarcode,
+                quantityFieldText = quantityFieldText,
+                onQuantityFieldValueChange = onQuantityFieldValueChange
             )
         }
 
@@ -157,7 +160,9 @@ fun ColetorBottomSheet(
     onDismissRequest: () -> Unit,
     sheetState: SheetState,
     barcode: String,
-    onSaveBarcode: () -> Unit
+    onSaveBarcode: () -> Unit,
+    quantityFieldText: String,
+    onQuantityFieldValueChange: (String) -> Unit,
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -173,10 +178,13 @@ fun ColetorBottomSheet(
         )
         BottomSheetBarcodeHeadline(barcode)
 
-        ColetorTextField()
+        ColetorTextField(quantityFieldText, onQuantityFieldValueChange)
 
         Button(
-            onClick = onSaveBarcode,
+            onClick = {
+                onSaveBarcode()
+                onDismissRequest()
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Blue.copy(alpha = 0.6f)
             ),
@@ -304,15 +312,17 @@ fun AssistChipRow(
 }
 
 @Composable
-fun ColetorTextField() {
-    var textState by remember { mutableStateOf("") }
+fun ColetorTextField(
+    text: String,
+    onValueChange: (String) -> Unit,
+) {
 
     TextField(
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number
         ),
-        value = textState,
-        onValueChange = { textState = it },
+        value = text,
+        onValueChange = onValueChange,
         label = { Text(text = "Quantidade")},
         modifier = Modifier
             .fillMaxWidth()

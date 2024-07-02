@@ -31,14 +31,19 @@ fun MainScreen(
     mostRecentBarcode: (String?) -> Unit,
     startCollect: () -> Unit,
     isCollectionRunning: Boolean,
-    onSaveBarcode: () -> Unit
+    onSaveBarcode: () -> Unit,
+    quantityFieldText: String,
+    onQuantityFieldValueChange: (String) -> Unit,
+
 ) {
     Column {
         AppTabRow(
             mostRecentBarcode = mostRecentBarcode,
             startCollect = startCollect,
             isCollectionRunning = isCollectionRunning,
-            onSaveBarcode = onSaveBarcode
+            onSaveBarcode = onSaveBarcode,
+            quantityFieldText = quantityFieldText,
+            onQuantityFieldValueChange = onQuantityFieldValueChange
         )
     }
 }
@@ -50,13 +55,17 @@ fun AppTabRow(
     startCollect: () -> Unit,
     isCollectionRunning: Boolean,
     onSaveBarcode: () -> Unit,
+    quantityFieldText: String,
+    onQuantityFieldValueChange: (String) -> Unit,
     tabsContent: List<@Composable () -> Unit> = listOf(
         {
             ScanScreen(
                 mostRecentBarcode,
                 startCollect = startCollect,
                 isCollectionRunning = isCollectionRunning,
-                onSaveBarcode = onSaveBarcode
+                onSaveBarcode = onSaveBarcode,
+                quantityFieldText = quantityFieldText,
+                onQuantityFieldValueChange = onQuantityFieldValueChange
             )
         },
         { HistoryScreen() }
