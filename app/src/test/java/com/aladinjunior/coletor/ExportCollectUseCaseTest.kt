@@ -1,7 +1,7 @@
 package com.aladinjunior.coletor
 
 import com.aladinjunior.coletor.main.domain.repository.ScannedProductRepository
-import com.aladinjunior.coletor.main.domain.usecase.GenerateFileUseCase
+import com.aladinjunior.coletor.main.domain.usecase.ExportCollectUseCase
 import com.aladinjunior.coletor.repository.FakeScannedProductRepository
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.cancel
@@ -13,16 +13,16 @@ import org.junit.Test
 import kotlin.io.path.createTempDirectory
 
 
-class GenerateFileUseCaseTest {
+class ExportCollectUseCaseTest {
 
     private val testDispatcher = StandardTestDispatcher()
-    private lateinit var generateFileUseCase: GenerateFileUseCase
+    private lateinit var exportCollectUseCase: ExportCollectUseCase
     private lateinit var scannedProductRepository: ScannedProductRepository
 
     @Before
     fun setup() {
         scannedProductRepository = FakeScannedProductRepository()
-        generateFileUseCase = GenerateFileUseCase(testDispatcher, scannedProductRepository)
+        exportCollectUseCase = ExportCollectUseCase(testDispatcher, scannedProductRepository)
     }
 
     @After
@@ -37,7 +37,7 @@ class GenerateFileUseCaseTest {
         val tempDir = createTempDirectory("testDir").toString()
         val fileContent = "hello world!"
 
-        val createdFile = generateFileUseCase(tempDir, fileName, fileContent)
+        val createdFile = exportCollectUseCase(tempDir, fileName, fileContent)
 
         val fileExists = createdFile?.exists()
         assertTrue("File exists", fileExists!!)

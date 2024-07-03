@@ -8,4 +8,8 @@ interface ScannedProductRepository {
 
     suspend fun fetchAllStockCode() : List<String>
 
+
+
+
+
 }

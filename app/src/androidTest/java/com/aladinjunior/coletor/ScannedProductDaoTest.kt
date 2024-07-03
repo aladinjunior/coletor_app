@@ -34,7 +34,7 @@ class ScannedProductDaoTest {
     }
 
     @Test
-    fun get_all_stockCodes_fromDatabase() = runBlocking {
+    fun getAll_stockCodes_fromDatabase() = runBlocking {
         val barcode1 = ScannedProduct.ScannedProductBuilder()
             .setBarcode("ABCD")
             .setQuantity("10")
@@ -50,10 +50,13 @@ class ScannedProductDaoTest {
 
         val stockCodes = scannedProductDao.getAllStockCode()
 
+        println("current stock codes: $stockCodes")
+
         assert(stockCodes.contains("ABCD10"))
         assert(stockCodes.contains("EFGH20"))
 
     }
+
 
 
 }

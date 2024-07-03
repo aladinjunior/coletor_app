@@ -15,4 +15,6 @@ class DefaultScannedProductRepository(
     override suspend fun fetchAllStockCode(): List<String> {
         return scannedProductDao.getAllStockCode()
     }
+
+
 }
