@@ -345,6 +345,7 @@ fun ColetorTextField(
             unfocusedContainerColor = Color.LightGray,
             focusedBorderColor = Color.Blue.copy(alpha = 0.6f),
             unfocusedBorderColor = Color.LightGray,
+            focusedLabelColor = Color.Blue.copy(alpha = 0.6f)
         )
     )
 }

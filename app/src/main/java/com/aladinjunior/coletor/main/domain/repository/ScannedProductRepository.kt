@@ -6,4 +6,6 @@ interface ScannedProductRepository {
 
     suspend fun insertScannedProduct(product: ScannedProduct)
 
+    suspend fun fetchAllStockCode() : List<String>
+
 }

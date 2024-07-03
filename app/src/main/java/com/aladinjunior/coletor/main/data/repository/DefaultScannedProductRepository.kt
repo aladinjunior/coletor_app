@@ -12,4 +12,7 @@ class DefaultScannedProductRepository(
         scannedProductDao.insert(product)
     }
 
+    override suspend fun fetchAllStockCode(): List<String> {
+        return scannedProductDao.getAllStockCode()
+    }
 }

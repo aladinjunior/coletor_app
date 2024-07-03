@@ -7,7 +7,17 @@ class FakeScannedProductRepository(
 
 ) : ScannedProductRepository {
 
-    override suspend fun insertScannedProduct(product: ScannedProduct) {
+    private val productsList = mutableListOf<ScannedProduct>()
+    private val stockCodesList = mutableListOf<String>()
 
+    override suspend fun insertScannedProduct(product: ScannedProduct) {
+        productsList.add(product)
+    }
+
+    override suspend fun fetchAllStockCode(): List<String> {
+        productsList.forEach {
+            stockCodesList.add(it.stockCode)
+        }
+        return stockCodesList
     }
 }

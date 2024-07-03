@@ -34,6 +34,9 @@
           <timeTargetWasSelectedWithDropDown value="2024-07-02T16:18:20.699796Z" />
         </State>
       </entry>
+      <entry key="get_all_stockCodes_fromDatabase()">
+        <State />
+      </entry>
     </value>
   </component>
 </project>

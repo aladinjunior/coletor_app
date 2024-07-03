@@ -85,7 +85,8 @@ dependencies {
     implementation(libs.androidx.room.ktx)
 
 
-    testImplementation("androidx.test:core:1.4.0")
+    testImplementation(libs.androidx.core)
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
