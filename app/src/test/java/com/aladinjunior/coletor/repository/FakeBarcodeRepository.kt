@@ -1,11 +1,11 @@
 package com.aladinjunior.coletor.repository
 
 import com.aladinjunior.coletor.main.data.db.ScannedProduct
-import com.aladinjunior.coletor.main.domain.repository.ScannedProductRepository
+import com.aladinjunior.coletor.main.domain.repository.BarcodeRepository
 
-class FakeScannedProductRepository(
+class FakeBarcodeRepository(
 
-) : ScannedProductRepository {
+) : BarcodeRepository {
 
     private val productsList = mutableListOf<ScannedProduct>()
     private val stockCodesList = mutableListOf<String>()
@@ -20,4 +20,5 @@ class FakeScannedProductRepository(
         }
         return stockCodesList
     }
+
 }

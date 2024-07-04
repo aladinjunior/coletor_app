@@ -2,6 +2,7 @@ package com.aladinjunior.coletor
 
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
+import com.aladinjunior.coletor.db.getTestDatabase
 import com.aladinjunior.coletor.main.data.db.AppDatabase
 import com.aladinjunior.coletor.main.data.db.ScannedProduct
 import com.aladinjunior.coletor.main.data.db.ScannedProductDao
@@ -19,12 +20,11 @@ class ScannedProductDaoTest {
     private lateinit var database: AppDatabase
     private lateinit var scannedProductDao: ScannedProductDao
 
+
+
     @Before
     fun setup() {
-        database = Room.inMemoryDatabaseBuilder(
-            ApplicationProvider.getApplicationContext(),
-            AppDatabase::class.java
-        ).allowMainThreadQueries().build()
+        database = getTestDatabase
         scannedProductDao = database.scannedProductDao()
     }
 
@@ -37,12 +37,12 @@ class ScannedProductDaoTest {
     fun getAll_stockCodes_fromDatabase() = runBlocking {
         val barcode1 = ScannedProduct.ScannedProductBuilder()
             .setBarcode("ABCD")
-            .setQuantity("10")
+            .setQuantity(10)
             .setStockCode("ABCD10")
             .build()
         val barcode2 = ScannedProduct.ScannedProductBuilder()
             .setBarcode("EFGH")
-            .setQuantity("20")
+            .setQuantity(20)
             .setStockCode("EFGH20")
             .build()
         scannedProductDao.insert(barcode1)

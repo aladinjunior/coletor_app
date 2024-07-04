@@ -1,7 +1,6 @@
 package com.aladinjunior.coletor
 
 import com.aladinjunior.coletor.camera.presentation.CameraViewModel
-import com.aladinjunior.coletor.repository.FakeScannedProductRepository
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -12,9 +11,7 @@ class CameraViewModelTest {
 
     @Before
     fun setup() {
-        viewModel = CameraViewModel(
-            FakeScannedProductRepository()
-        )
+        viewModel = CameraViewModel()
     }
 
     @Test

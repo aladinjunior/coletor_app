@@ -2,7 +2,7 @@ package com.aladinjunior.coletor.main.domain.repository
 
 import com.aladinjunior.coletor.main.data.db.ScannedProduct
 
-interface ScannedProductRepository {
+interface BarcodeRepository {
 
     suspend fun insertScannedProduct(product: ScannedProduct)
 

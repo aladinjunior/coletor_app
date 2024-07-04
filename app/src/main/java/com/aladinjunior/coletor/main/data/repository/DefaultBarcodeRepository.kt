@@ -2,11 +2,11 @@ package com.aladinjunior.coletor.main.data.repository
 
 import com.aladinjunior.coletor.main.data.db.ScannedProduct
 import com.aladinjunior.coletor.main.data.db.ScannedProductDao
-import com.aladinjunior.coletor.main.domain.repository.ScannedProductRepository
+import com.aladinjunior.coletor.main.domain.repository.BarcodeRepository
 
-class DefaultScannedProductRepository(
+class DefaultBarcodeRepository(
     private val scannedProductDao: ScannedProductDao
-) : ScannedProductRepository {
+) : BarcodeRepository {
 
     override suspend fun insertScannedProduct(product: ScannedProduct) {
         scannedProductDao.insert(product)

@@ -9,18 +9,17 @@ data class ScannedProduct(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val barcode: String,
-    val quantity: String,
+    val quantity: Int,
     val stockCode: String,
 ) {
     class ScannedProductBuilder {
         private var id: Long = 0
         private var barcode: String = ""
-        private var quantity: String = ""
+        private var quantity: Int = 0
         private var stockCode: String = ""
 
-        fun setId(id: Long) = apply { this.id = id }
         fun setBarcode(barcode: String) = apply { this.barcode = barcode }
-        fun setQuantity(quantity: String) = apply { this.quantity = quantity }
+        fun setQuantity(quantity: Int) = apply { this.quantity = quantity }
         fun setStockCode(stockCode: String) = apply { this.stockCode = stockCode }
 
         fun build(): ScannedProduct {

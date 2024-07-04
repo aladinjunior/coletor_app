@@ -3,58 +3,52 @@ package com.aladinjunior.coletor.main
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import com.aladinjunior.coletor.camera.presentation.CameraViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aladinjunior.coletor.main.data.db.ScannedProduct
+import com.aladinjunior.coletor.main.presentation.MainViewModel
+import com.aladinjunior.coletor.main.presentation.MainViewModelProvider
 
 @Composable
 fun MainScreenRoute(
-    viewModel: CameraViewModel = viewModel(
-        factory = CameraViewModel.CameraViewModelProvider.provideFactory(
-            LocalContext.current
-        )
+    cameraViewModel: CameraViewModel = viewModel(
+        factory = CameraViewModel.CameraViewModelProvider.factory
+    ),
+    mainViewModel: MainViewModel = viewModel(
+        factory =
+        MainViewModelProvider.provideFactory(LocalContext.current)
     )
+
 ) {
-    val isCollectionRunning by viewModel.isCollectRunning.collectAsState()
-    val quantityText by viewModel.itemQuantity.collectAsState()
-    val barcode by viewModel.mostRecentBarcode.collectAsState()
+    val isCollectionRunning by cameraViewModel.isCollectRunning.collectAsState()
+    val quantityText by cameraViewModel.itemQuantity.collectAsState()
+    val barcode by cameraViewModel.mostRecentBarcode.collectAsState()
 
     MainScreen(
         mostRecentBarcode = {
             it?.let { notNullMostRecentBarcode ->
-                viewModel.setCurrentBarcode(notNullMostRecentBarcode)
+                cameraViewModel.setCurrentBarcode(notNullMostRecentBarcode)
             }
         },
-        startCollect = viewModel::startCollect,
+        startCollect = cameraViewModel::startCollect,
 
-        finalizeCollect = viewModel::finalizeCollect,
+        finalizeCollect = cameraViewModel::finalizeCollect,
 
         isCollectionRunning = isCollectionRunning,
 
         onSaveBarcode = {
-            val stockCode = viewModel.createStockCode(barcode, quantityText)
-            val scannedProduct = ScannedProduct.ScannedProductBuilder()
-                .setBarcode(barcode)
-                .setQuantity(quantityText)
-                .setStockCode(stockCode)
-                .build()
-            with(viewModel) {
-                saveBarcode(scannedProduct)
-                resetBarcodeValues()
-            }
+
+            mainViewModel.saveBarcode(barcode, quantityText.toInt())
+            cameraViewModel.resetBarcodeValues()
 
         },
         quantityFieldText = quantityText,
 
         onQuantityFieldValueChange = {
-            viewModel.setCurrentItemQuantity(it)
+            cameraViewModel.setCurrentItemQuantity(it)
         },
 
 
-
-    )
+        )
 }
