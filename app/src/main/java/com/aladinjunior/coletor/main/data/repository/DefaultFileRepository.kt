@@ -17,6 +17,11 @@ class DefaultFileRepository : FileRepository {
 
     }
 
-    override fun writeToFile(file: File, content: String) = file.writeText(content)
+    override fun writeToFile(file: File, content: String) {
+
+        file.writeText(content)
+    }
+
 
 }
+
