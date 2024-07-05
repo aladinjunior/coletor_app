@@ -1,5 +1,6 @@
 package com.aladinjunior.coletor.main.data.repository
 
+import android.util.Log
 import com.aladinjunior.coletor.main.domain.repository.FileRepository
 import java.io.File
 import java.io.IOException
@@ -17,9 +18,15 @@ class DefaultFileRepository : FileRepository {
 
     }
 
-    override fun writeToFile(file: File, content: String) {
+    override fun writeToFile(file: File, content: List<String>) {
 
-        file.writeText(content)
+        if (content.isEmpty()) {
+            throw IllegalArgumentException("content is null or empty!")
+        }
+        val breakedUpLinesContent = content.joinToString(separator = "\n")
+        file.writeText(breakedUpLinesContent)
+
+
     }
 
 

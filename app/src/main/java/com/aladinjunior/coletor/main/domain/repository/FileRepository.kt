@@ -6,6 +6,6 @@ interface FileRepository {
 
     suspend fun createFile(pathName: String, fileName: String) : File?
 
-    fun writeToFile(file: File, content: String)
+    fun writeToFile(file: File, content: List<String>)
 
 }

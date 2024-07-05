@@ -17,7 +17,7 @@ class ExportCollectUseCase(
         return withContext(dispatcher) {
             try {
                 val createdFile = fileRepository.createFile(pathName, fileName)
-                val content = barcodeRepository.fetchAllStockCode().toString()
+                val content = barcodeRepository.fetchAllStockCode()
                 if (createdFile != null) fileRepository.writeToFile(createdFile, content)
                 createdFile
             } catch (e: Exception) {

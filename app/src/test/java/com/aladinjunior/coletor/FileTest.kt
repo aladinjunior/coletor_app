@@ -1,13 +1,16 @@
 
 package com.aladinjunior.coletor
 
+import com.aladinjunior.coletor.main.data.repository.DefaultFileRepository
 import com.aladinjunior.coletor.main.domain.repository.FileRepository
 import com.aladinjunior.coletor.main.domain.repository.BarcodeRepository
 import com.aladinjunior.coletor.main.domain.usecase.ExportCollectUseCase
+import io.mockk.InternalPlatformDsl.toStr
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.cancel
@@ -16,13 +19,14 @@ import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.After
+import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Test
 import java.io.File
 import kotlin.io.path.createTempDirectory
 
 
-class ExportCollectUseCaseTest {
+class FileTest {
 
 
     private lateinit var exportCollectUseCase: ExportCollectUseCase
@@ -37,17 +41,21 @@ class ExportCollectUseCaseTest {
     private val testDispatcher = StandardTestDispatcher(testScheduler)
     private val testScope = TestScope(testDispatcher)
 
+    private lateinit var mockFile: File
 
     @Before
     fun setup() {
         mockBarcodeRepository = mockk()
-        mockFileRepository = mockk()
+        mockFileRepository = mockk(relaxed = true)
         exportCollectUseCase =
             ExportCollectUseCase(testDispatcher, mockBarcodeRepository, mockFileRepository)
 
         testFile = File(tempDir, fileName).apply {
             createNewFile()
         }
+
+        mockFile = File(tempDir, fileName)
+
     }
 
     @After
@@ -64,6 +72,7 @@ class ExportCollectUseCaseTest {
         val fileName = "testFile.txt"
         val tempDir = createTempDirectory("testDir").toString()
 
+        coEvery { mockFileRepository.createFile(any(), any()) } returns testFile
 
         val createdFile = mockFileRepository.createFile(tempDir, fileName)
 
@@ -75,21 +84,6 @@ class ExportCollectUseCaseTest {
 
     }
 
-    @Test
-    fun whenWriteContent_contentIsWrittenInFile() = runTest {
-        val content = "hello world! write content test!"
-
-        mockFileRepository.writeToFile(testFile, content)
-
-        val textInFile = testFile.readText()
-
-        assertTrue(textInFile == content)
-
-        println("content: $content")
-        println("textInFile: $textInFile")
-
-    }
-
 
     @Test
     fun whenExportCollect_stockCodesAreReturnedInFile() = testScope.runTest {
@@ -97,13 +91,15 @@ class ExportCollectUseCaseTest {
             "AAA111", "BBB222", "CCC333"
         )
 
+
         // Mock the object and methods
-        val mockFile = File(tempDir, fileName)
+
         coEvery { mockBarcodeRepository.fetchAllStockCode()  } returns mockStockCodes
         coEvery { mockFileRepository.createFile(any(), any()) } returns mockFile
-        every { mockFileRepository.writeToFile(mockFile, mockStockCodes.toString()) } answers {
+        every { mockFileRepository.writeToFile(mockFile, mockStockCodes) } answers {
             mockFile.writeText(mockStockCodes.toString())
         }
+
 
         // Run the use case and get the text of the content of the created file
         val actualFileContent = exportCollectUseCase(tempDir, fileName)?.readText()
@@ -115,7 +111,45 @@ class ExportCollectUseCaseTest {
         coVerify {  mockBarcodeRepository.fetchAllStockCode()   }
 
 
+    }
 
+    @Test
+    fun whenWriteFile_stockCodesAreWrittenInCorrectFormat() = testScope.runTest {
+
+        val mockStockCodesFromDb = listOf(
+            "ABC1", "ABC2", "ABC3", "ABC4"
+        )
+
+        val expectedStockCodesFormat = "ABC1\nABC2\nABC3\nABC4"
+
+
+
+        coEvery { mockFileRepository.createFile(any(), any()) } returns mockFile
+        every { mockFileRepository.writeToFile(mockFile, mockStockCodesFromDb) } answers {
+            val expectedFormatStockCodes = mockStockCodesFromDb.joinToString(separator = "\n")
+            mockFile.writeText(expectedFormatStockCodes)
+        }
+
+        mockFileRepository.writeToFile(mockFile, mockStockCodesFromDb)
+
+        verify { mockFileRepository.writeToFile(mockFile, mockStockCodesFromDb) }
+
+
+        assertEquals(expectedStockCodesFormat, mockFile.readText())
+
+
+    }
+
+
+    @Test
+    fun contentNotWrittenInFile_whenWriteFile_errorMessageIsReturned() {
+        val fileRepository = DefaultFileRepository()
+
+        val exception = assertThrows(IllegalArgumentException::class.java) {
+            fileRepository.writeToFile(mockFile, emptyList())
+        }
+
+        assertEquals("content is null or empty!", exception.message)
 
     }
 
