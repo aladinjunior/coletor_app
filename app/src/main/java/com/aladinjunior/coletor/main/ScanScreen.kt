@@ -70,6 +70,7 @@ fun ScanScreen(
     mostRecentBarcode: (String?) -> Unit,
     startCollect: () -> Unit,
     finalizeCollect: () -> Unit,
+    exportCollect: () -> Unit,
     isCollectionRunning: Boolean,
     onSaveBarcode: () -> Unit,
     quantityFieldText: String,
@@ -138,7 +139,7 @@ fun ScanScreen(
         )
         AssistChipRow(
             startCollect = startCollect,
-            generateFile = {},
+            exportCollect = exportCollect,
             finalizeCollect = finalizeCollect
         )
         if (showBottomSheet) {
@@ -273,7 +274,7 @@ fun FakeCameraPreview() {
 @Composable
 fun AssistChipRow(
     startCollect: () -> Unit,
-    generateFile: () -> Unit,
+    exportCollect: () -> Unit,
     finalizeCollect: () -> Unit,
 ) {
     Row(
@@ -285,7 +286,7 @@ fun AssistChipRow(
                 onClick = {
                     when (action) {
                         START_COLLECT -> startCollect()
-                        GENERATE_FILE -> generateFile()
+                        GENERATE_FILE -> exportCollect()
                         FINALIZE_COLLECT -> finalizeCollect()
                     }
                 },
